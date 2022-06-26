@@ -1,0 +1,30 @@
+{
+    "appName": "funStickers",
+    "projectId": "8ac7e0ff-558c-4b9b-89b4-592ef209228f",
+    "version": "2.1.0",
+    "isFromSample": false,
+    "solutionSettings": {
+        "name": "fx-solution-azure",
+        "version": "1.0.0",
+        "hostType": "Azure",
+        "azureResources": [],
+        "capabilities": [
+            "MessagingExtension"
+        ],
+        "activeResourcePlugins": [
+            "fx-resource-identity",
+            "fx-resource-bot",
+            "fx-resource-local-debug",
+            "fx-resource-appstudio",
+            "fx-resource-cicd",
+            "fx-resource-api-connector"
+        ]
+    },
+    "programmingLanguage": "javascript",
+    "pluginSettings": {
+        "fx-resource-bot": {
+            "host-type": "app-service",
+            "capabilities": []
+        }
+    }
+}
