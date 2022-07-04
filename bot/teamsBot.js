@@ -5,6 +5,16 @@ const rawWelcomeCard = require("./adaptiveCards/welcome.json");
 const rawLearnCard = require("./adaptiveCards/learn.json");
 const cardTools = require("@microsoft/adaptivecards-tools");
 
+const images = {
+  "mildPanic": "https://lh3.googleusercontent.com/pw/AM-JKLUvxSzOhs65sscX3mncohZZJvQl7lKBkapdIXIfJWn1WICcWflJZhTQupWaCXaEXkjiRTZ5nppdw64Z_ZIK91skx4L_QilfcMnVdP0Vrc_Fm3_MhwoHUdJxBE0d1zFTk0cykA_YrmxVzjd76QfQl2UZ=s128-no?authuser=0",
+  "sussy": "https://lh3.googleusercontent.com/pw/AM-JKLWWTFpAKdUsHeBO22RE4u5V7ssJYf7R2WrovkQq5t60UdsYywj_ftUP2ycUMAl326hyMABmayu2qmM2xS9Y91Rha_Ych_98uNqHLofboznZcy_iyGnDmFd1PwXa4oQyef8zAzJsc-YACS63Trmqrpgb=s128-no?authuser=0",
+  "pikachuSurprise": "https://lh3.googleusercontent.com/pw/AM-JKLUoeRLPoOhariNfwlqVKBRopcfClPBU8em5C1VQh_kz8xMn_YOY802Z6tkTtw6Eoy0plVbsvSaa0sQl7x_DM8tC_--9n6s59sS-vzsJvXqTXNiqsy6jT9Xca2a4OZe38vfh1nqsEvHdgcAhu97itBxn=s128-no?authuser=0",
+  "partyParrot": "https://lh3.googleusercontent.com/pw/AM-JKLX7yt7EY7BXdpvcHfnbod4TdsQ9F1czew6T5uQPXsF6a1eS9e78jiZMdVdsfZ_Mdgc7wuRXfl9gNel8EmV_taRbksoTzKYdTCCRwrdx9OrobvdfGN8P890raXubJn559uxmXanck6T0-A3GdPPjkP69=w35-h25-no?authuser=0",
+  "catJam": "https://lh3.googleusercontent.com/pw/AM-JKLW0gT9X2ehaiwBpH5oEeKGDIc530WUD0Om7c399LKSFCJueciXmUXHIJhjytU4rPVELlWQzwbLisw_kCPZhBp4tsDFi6gKrlkCokpGJQ478X7_ZMOmFoujrXBmZzYmF5rAFpUI6NhoSuchYMPNukZZ2=s180-no?authuser=0"
+}
+
+
+
 class TeamsBot extends TeamsActivityHandler {
   constructor() {
     super();
@@ -91,30 +101,37 @@ class TeamsBot extends TeamsActivityHandler {
 
   // Search.
   async handleTeamsMessagingExtensionQuery(context, query) {
+    console.log("===============")
+    console.log(query);
     const searchQuery = query.parameters[0].value;
-    const response = await axios.get(
-      `http://registry.npmjs.com/-/v1/search?${querystring.stringify({
-        text: searchQuery,
-        size: 8,
-      })}`
-    );
+    const search = searchQuery.toString();
+    console.log(searchQuery)
+    console.log(search)
 
+
+    
+    const results = [];
+    Object.keys(images).forEach(name => {
+      if (name.toLowerCase().startsWith(search.toLowerCase())){
+        console.log(name)
+        results.push(name);
+      }
+    })
+
+    console.log("--------------")
     const attachments = [];
-    response.data.objects.forEach((obj) => {
-      const heroCard = CardFactory.heroCard(obj.package.name);
-      const preview = CardFactory.heroCard(obj.package.name);
-      preview.content.tap = {
-        type: "invoke",
-        value: { name: obj.package.name, description: obj.package.description },
-      };
+    results.forEach((name) => {
+      const heroCard = CardFactory.heroCard("", "", [images[name]]);
+      const preview = CardFactory.heroCard(name, name, [images[name]]);
       const attachment = { ...heroCard, preview };
       attachments.push(attachment);
     });
 
+
     return {
       composeExtension: {
         type: "result",
-        attachmentLayout: "list",
+        attachmentLayout: "grid",
         attachments: attachments,
       },
     };
